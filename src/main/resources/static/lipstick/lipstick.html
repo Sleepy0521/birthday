@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="../js/jquery-1.9.0.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script type="text/javascript" src="/js/config.js"></script>
+    <style>
+        .form-group{
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" id="question">
+            <!--<div class="row">
+                <div class="col-md-6">
+                    <img src="./picture/chili.jpg">
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="text" class="form-control" aria-describedby="chilli"
+                               placeholder="请输入正确的口红颜色（如：小辣椒色）">
+                        <span id="chilli" class="help-block" answer="小辣椒色"></span>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+    <div class="row" style="margin-bottom:10px ">
+        <div class="col-md-10">
+        </div>
+        <div class="col-md-2">
+            <span>没答完题你点什么点？</span>
+            <button id="submit" type="button" class="btn btn-primary" disabled="disabled">提交答卷</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        //从后台获取数据
+        getData();
+        //给提交按钮绑定事件
+        $('#submit').click(function () {
+            //发送请求  校验数据（后台校验数据省略）
+            $.ajax({
+                url: serverUrl + "/lipstick/answer",
+                type: "get",
+                //服务器返回相应的内容格式
+                dataType: 'json',
+                //请求成功后的回调函数
+                success: function (data) {
+                    if (data.code = 100) {
+                        alert(data.msg);
+                        window.location.href = serverUrl + "/coupon/coupon.html?type=小仙女贪吃券"
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+
+        });
+
+    });
+    //从后台获取数据
+    function getData() {
+        $.ajax({
+            url: serverUrl + "/lipstick/getLipstick",
+            type: "get",
+            //服务器返回相应的内容格式
+            dataType: 'json',
+            //请求成功后的回调函数
+            success: function (data) {
+                if (data.code = 100) {
+                    //构造每道题
+                    createLipstick(data.extend.lipsticks);
+                    //给每一个输入框绑定数据
+                    adapterInput();
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+    //根据口红数据构造页面
+    function createLipstick(data) {
+        $.each(data, function(i, item) {
+            var $row = $('<div class="row" style="margin-top: 10px"></div>');
+            var $picture = $('<div class="col-md-6"></div>').append('<img src=' + item.picturePath + '>')
+            var $input = $('<div class="col-md-4">' +
+                '                    <div class="form-group">' +
+                '                        <input type="text" class="form-control" aria-describedby='+item.brand+' placeholder="请输入正确的口红颜色（如：小辣椒色）">' +
+                '                        <span id='+item.brand+' class="help-block" answer='+item.color+'></span>' +
+                '                    </div>' +
+                '                </div>')
+            $row.append($picture).append($input);
+            $('#question').append($row);
+        });
+
+
+
+    }
+    //适配所有的输入框
+    function adapterInput() {
+        $('.form-group input').change(function () {
+            var sehao = $(this).val();
+            var answer = $(this).next().attr("answer");
+            if (sehao == answer) {
+                $(this).parent().attr("class", "form-group has-success");
+                $(this).next().text("success");
+            } else {
+                $(this).parent().attr("class", "form-group has-error");
+                $(this).next().text("error");
+            }
+            //遍历所有的提示框
+            var flag = true;
+            $.each($('.help-block'), function () {
+                if ($(this).text()==""||$(this).text() == "error") {
+                    flag = false;
+                }
+            });
+            if (flag == true) {
+                $('#submit').removeAttr("disabled");
+            } else {
+                $('#submit').attr("disabled", "disabled");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery-1.9.0.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script type="text/javascript" src="/js/config.js"></script>
+</head>
+<body>
+<!--画一个优惠券-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <h1 id="type"></h1>
+        </div>
+        <div class="col-md-8">
+            <h1 id="uuid"></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 id="brief"></h1>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var type = getTypeByUrl();
+        console.log(type);
+        getCoupon(type)
+    });
+
+    //
+    function getTypeByUrl() {
+        //获取到连接后面的参数比如id=1&name=fff
+        var urlParaStr = window.location.href.split("?")[1];
+        var arr = urlParaStr.split("=");
+        return decodeURIComponent(arr[1]);
+    }
+
+    function getCoupon(type) {
+        $.ajax({
+            url: serverUrl + "/getCoupon?type=" + type,
+            type: "get",
+            //服务器返回相应的内容格式
+            dataType: 'json',
+            //请求成功后的回调函数
+            success: function (data) {
+                if (data.code == "100") {
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+                //适配对应的券信息
+                adapterCoupon(data.extend.coupon)
+            }
+        });
+    }
+    function adapterCoupon(data) {
+        console.log(data);
+        $('#type').text(data.type);
+        $('#uuid').text(data.uuid);
+        $('#brief').text(data.brief);
+
+    }
+</script>
+</body>
+</html>

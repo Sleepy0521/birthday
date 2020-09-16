@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery-1.9.0.min.js"></script>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script type="text/javascript" src="/js/config.js"></script>
+    <style>
+        .btn {
+            margin: 2px;
+        }
+        .font{
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+<!--10011111011011   10203-->
+<!--1001100001001001011001001 19960521-->
+<!--1001100001011101010100100 19970724-->
+
+
+<!--按钮-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <!--题目-->
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="answer" class="font">0011111011011(2)+1001100001001001011001001(2)=
+                        <input type="text" class="form-control" id="answer" placeholder="我就不告诉你答案"/>(10)
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div  class="col-md-12">
+            <span class="font">你以为就只是答个题那么简单嘛？so~！猜一猜哪个才是正确的按钮</span>
+        <div>
+    <div class="row">
+        <div id="buttonGroup" class="col-md-12">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        for (var i = 0; i < 1314; i++) {
+            var $button = $('<button class="btn btn-info btn-none" type="button">确定</button>');
+            if (i == 44||i==789) {
+                $button = $('<button class="btn btn-danger btn-none" type="button">确定</button>');
+            }
+            if (i == 1122) {
+                $button = $('<button class="btn btn-warning btn-none" type="button">确定</button>');
+            }
+            if (i == 388) {
+                $button = $('<button class="btn btn-success btn-none" type="button">确定</button>');
+            }
+            if (i == 520) {
+                $button = $('<button id="submit" class="btn btn-info" type="button">确定</button>');
+            }
+            $('#buttonGroup').append($button);
+        }
+        adapterButton();
+
+    });
+
+    function adapterButton() {
+        $('.btn-none').click(function () {
+            $.ajax({
+                url: serverUrl + "/count/none",
+                type: "get",
+                //服务器返回相应的内容格式
+                dataType: 'json',
+                //请求成功后的回调函数
+                success: function (data) {
+                    alert(data.msg);
+                }
+            });
+        });
+
+        $('#submit').click(function () {
+            $.ajax({
+                url: serverUrl + "/count/answer",
+                type: "POST",
+                //请求体内容的方式
+                contentType: "application/json;charset=UTF-8",
+                //请求体
+                data: JSON.stringify({
+                    "answer": $('#answer').val()
+                }),
+                //服务器返回相应的内容格式
+                dataType: 'json',
+                //请求成功后的回调函数
+                success: function (data) {
+                    if (data.code == "100") {
+                        alert(data.msg);
+                        window.location.href = serverUrl + "/coupon/coupon.html?type=小仙女搓澡券"
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        });
+    }
+
+</script>
+</body>
+</html>
