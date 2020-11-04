@@ -24,7 +24,7 @@ public class CouponController {
     CouponMapper couponMapper;
 
 
-  /*//获取所有券的信息
+  /*//获取所有券的信息都是
     @GetMapping("/get2")
     public Msg get2(){
         IPage<Coupon> page = couponMapper.selectPage(new Page<>(), null);
