@@ -15,7 +15,7 @@
 */
 
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+#SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for count
@@ -88,4 +88,4 @@ INSERT INTO `lipstick` VALUES ('chili', './picture/chili.jpg', '小辣椒色', '
 INSERT INTO `lipstick` VALUES ('cockney', './picture/cockney.jpg', '草莓红色', '质地水润， 涂起来原地秒变小仙女。');
 INSERT INTO `lipstick` VALUES ('ruby-woo', './picture/ruby-woo.jpg', '复古红色', '复古红色 ，哑光质地 ，显白显气色不挑皮 。');
 
-SET FOREIGN_KEY_CHECKS = 1;
+#SET FOREIGN_KEY_CHECKS = 1;
